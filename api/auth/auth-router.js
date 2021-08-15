@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
-const { useStore } = require("react-redux");
+const Users = require("../users/users-model");
 
 router.post("/register", (req, res) => {
   res.end("implement register, please!");
@@ -23,7 +23,11 @@ router.post("/register", (req, res) => {
 
     user.password = hash;
 
-    Users.add();
+    Users.add(user)
+      .then((newUser) => {
+        res.status(201).json(newUser);
+      })
+      .catch(next);
   });
 
   /*
