@@ -2,9 +2,17 @@ const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const Users = require("../users/users-model");
 const tokenBuilder = require("./tokenbuilder");
+const {
+  checkAuthPayload,
+  checkUsernameAvailable,
+} = require("../middleware/input-validation-middleware");
 
-router.post("/register", (req, res, next) => {
-  /*
+router.post(
+  "/register",
+  checkAuthPayload,
+  checkUsernameAvailable,
+  (req, res, next) => {
+    /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
     DO NOT EXCEED 2^8 ROUNDS OF HASHING!
@@ -16,19 +24,20 @@ router.post("/register", (req, res, next) => {
       }
       */
 
-  let user = req.body;
+    let user = req.body;
 
-  const rounds = process.env.BCRYPT_ROUNDS || 8;
-  const hash = bcrypt.hashSync(user.password, rounds);
+    const rounds = process.env.BCRYPT_ROUNDS || 8;
+    const hash = bcrypt.hashSync(user.password, rounds);
 
-  user.password = hash;
+    user.password = hash;
 
-  Users.add(user)
-    .then((newUser) => {
-      res.status(201).json(newUser);
-    })
-    .catch(next);
-});
+    Users.add(user)
+      .then((newUser) => {
+        res.status(201).json(newUser);
+      })
+      .catch(next);
+  }
+);
 
 /*
 
@@ -47,7 +56,7 @@ router.post("/register", (req, res, next) => {
       the response body should include a string exactly as follows: "username taken".
   */
 
-router.post("/login", (req, res, next) => {
+router.post("/login", checkAuthPayload, (req, res, next) => {
   let { username, password } = req.body;
 
   Users.findBy({ username })
