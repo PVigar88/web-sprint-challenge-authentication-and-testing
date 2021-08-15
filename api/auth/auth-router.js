@@ -47,7 +47,7 @@ router.post("/register", (req, res, next) => {
       the response body should include a string exactly as follows: "username taken".
   */
 
-router.post("/login", (req, res) => {
+router.post("/login", (req, res, next) => {
   let { username, password } = req.body;
 
   Users.findBy({ username })
