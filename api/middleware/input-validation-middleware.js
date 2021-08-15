@@ -10,12 +10,12 @@ const checkAuthPayload = (req, res, next) => {
 
 const checkUsernameAvailable = async (req, res, next) => {
   const { username } = req.body;
-  const userTaken = await User.findBy(username);
+  const userTaken = await User.findBy({ username });
 
-  if (userTaken) {
-    next({ status: "422", message: "username taken" });
-  } else {
+  if (!userTaken) {
     next();
+  } else {
+    next({ status: "422", message: "username taken" });
   }
 };
 
