@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
+const { useStore } = require("react-redux");
 
 router.post("/register", (req, res) => {
   res.end("implement register, please!");
@@ -21,6 +22,8 @@ router.post("/register", (req, res) => {
     const hash = bcrypt.hashSync(user.password, rounds);
 
     user.password = hash;
+
+    Users.add();
   });
 
   /*
