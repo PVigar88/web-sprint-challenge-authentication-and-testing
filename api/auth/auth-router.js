@@ -24,14 +24,14 @@ router.post(
       }
       */
 
-    let user = req.body;
+    let userToAdd = req.body;
 
     const rounds = process.env.BCRYPT_ROUNDS || 8;
     const hash = bcrypt.hashSync(user.password, rounds);
 
     user.password = hash;
 
-    Users.add(user)
+    Users.add(userToAdd)
       .then((newUser) => {
         res.status(201).json(newUser);
       })
