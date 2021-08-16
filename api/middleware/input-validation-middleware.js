@@ -12,10 +12,10 @@ const checkUsernameAvailable = async (req, res, next) => {
   const { username } = req.body;
   const userTaken = await User.findBy({ username });
 
-  if (userTaken) {
-    next({ status: 401, message: "username taken" });
-  } else {
+  if (!userTaken) {
     next();
+  } else {
+    next({ status: 401, message: "username taken" });
   }
 };
 
