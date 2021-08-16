@@ -11,7 +11,7 @@ const checkAuthPayload = (req, res, next) => {
 const checkUsernameAvailable = async (req, res, next) => {
   const { username } = req.body;
   await Users.findBy({ username })
-    .then(({ user }) => {
+    .then((user) => {
       if (user.username) {
         next({ status: 401, message: "username taken" });
       } else {
