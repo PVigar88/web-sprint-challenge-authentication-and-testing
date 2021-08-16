@@ -10,15 +10,13 @@ const checkAuthPayload = (req, res, next) => {
 
 const checkUsernameAvailable = async (req, res, next) => {
   const { username } = req.body;
-  await User.findBy({ username })
-    .then((user) => {
-      if (user.username) {
-        next({ status: 401, message: "username taken" });
-      } else {
-        next();
-      }
-    })
-    .catch();
+  const userTaken = await User.findBy({ username });
+
+  if (userTaken) {
+    next({ status: 401, message: "username taken" });
+  } else {
+    next();
+  }
 };
 
 module.exports = { checkAuthPayload, checkUsernameAvailable };
