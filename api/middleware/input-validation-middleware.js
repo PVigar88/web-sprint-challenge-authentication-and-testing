@@ -13,7 +13,7 @@ const checkUsernameAvailable = async (req, res, next) => {
   await User.findBy({ username })
     .then((user) => {
       if (user.username) {
-        next({ status: 401, message: "username taken" });
+        res.json({ message: "username taken" });
       } else {
         next();
       }
