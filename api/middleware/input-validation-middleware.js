@@ -18,7 +18,7 @@ const checkUsernameAvailable = async (req, res, next) => {
         next();
       }
     })
-    .catch(next);
+    .catch({ status: 401, message: "username taken" });
 };
 
 module.exports = { checkAuthPayload, checkUsernameAvailable };
