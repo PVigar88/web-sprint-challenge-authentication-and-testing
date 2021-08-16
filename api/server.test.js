@@ -3,7 +3,7 @@
 const request = require("supertest");
 const server = require("./server");
 const db = require("../data/dbConfig");
-const User = require("./users/users-model");
+const Users = require("./users/users-model");
 
 beforeAll(async () => {
   await db.migrate.rollback();
@@ -19,19 +19,40 @@ test("sanity", () => {
 });
 
 describe("[POST] /auth/register", () => {
-  it.skip("adds a user and returns it", async () => {
-    //test 1
+  it("adds a user and returns it", async () => {
+    await request(server).post("/api/auth/register").send({
+      username: "Captain Marvel",
+      password: "foobar",
+    });
+    expect(
+      await Users.findBy({
+        username: "Captain Marvel",
+      })
+    ).toHaveLength(1);
   });
-  it.skip("returns error if username is already taken", async () => {
-    //test 2
+  it("returns error if username is already taken", async () => {
+    const res = await request(server).post("/api/auth/register").send({
+      username: "Captain Marvel",
+    });
+    expect(res.body).toMatchObject({ message: /'username taken'/i });
   });
 });
 
 describe("[POST] /auth/login", () => {
-  it.skip("on successful login returns username and token", async () => {
-    //test 1
+  it("on successful login returns username and token", async () => {
+    await request(server).post("/api/auth/login").send({
+      username: "Captain Marvel",
+      password: "foobar",
+    });
+    expect.objectContaining({ token: expect.toBeDefined });
   });
-  it.skip("returns error when wrong credentials are used", async () => {
-    //test 2
+  it("returns error when credentials are missing", async () => {
+    const res = await request(server).post("/api/auth/login").send({
+      username: "",
+      password: "",
+    });
+    expect(res.body).toMatchObject({
+      message: /'username and password required'/i,
+    });
   });
 });
