@@ -29,7 +29,7 @@ router.post(
     const rounds = process.env.BCRYPT_ROUNDS || 8;
     const hash = bcrypt.hashSync(user.password, rounds);
 
-    user.password = hash;
+    userToAdd.password = hash;
 
     Users.add(userToAdd)
       .then((newUser) => {
